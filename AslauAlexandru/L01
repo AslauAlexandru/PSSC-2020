@@ -1,0 +1,17 @@
+Functionalitatile aplicatiei:
+-prezinta job-uri specifice in diferite limbaje de programare
+-prezinta diferiti utilizatori
+-prezinta diferie companii partenere
+-construirea produselor care imputernicesc dezvoltatorii si le conectam la solutii care permit productivitate, crestere si descoperire
+-prezinta tag-uri(etichetele) pt clarificarea intrebarilor,etichetele potrivite sunt folosite mai usor pt toti care doresc sa gaseasca si sa raspunda la intrebarii
+-ajuta dezvoltatorii si tehnologiile pt scrierea scenariului de viitor
+-utilizatorii pot pune intrebari despre diverse probleme,si altii care s-au intalnit cu ele ii pot ajuta cu raspunsuri
+-produsele si instrumentele noastre ii ajuta pe dezvoltatori si tehnologi �n viata si la locul de munca,aceste produse includ Stack Overflow for Teams, Stack Overflow Advertising si Stack Overflow pentru Talent si job-uri
+-Stack Overflow for Teams, produsul nostru principal de colaborare SaaS, ajuta mii de companii din intreaga lume ca tranzitie la munca la distanta, abordeaza provocarile de continuitate a afacerii si sufera transformari digitale
+-fie ca este vorba despre Stack Overflow sau de Stack Overflow for Teams, comunitatea este �n centrul a tot ceea ce facem.
+
+
+Ideea mea de aplicatia:
+Sa consideram un depou in forma de Y(intrarea e capatul din stanga al lui Y,si iesirea capatul dreapta a lui Y). Observati ca exista o linie de intrare, pe care intra n vagoane, numerotate de la 1 la n in ordinea intrarii.
+Vagoanele intra in depou, urmand apoi sa iasa intr-o ordine oarecare pe linia de iesire.
+Dat fiind numarul de vagoane sa se determine numarul de modalitati distincte de aranjare a vagoanelor pe linia de iesire.
