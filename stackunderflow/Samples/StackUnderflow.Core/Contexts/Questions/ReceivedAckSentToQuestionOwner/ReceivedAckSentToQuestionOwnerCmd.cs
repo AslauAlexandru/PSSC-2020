@@ -5,22 +5,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace StackUnderflow.Domain.Core.Contexts.Questions.ReceivedAckSentToQuestionOwner
 {
-   public class ReceivedAckSentToQuestionOwnerCmd
-    {
-
-        [Required]
-        public int ReplyId { get; }
-        [Required]
+   public partial class ReceivedAckSentToQuestionOwnerCmd
+    { 
         public int QuestionId { get; }
-        [Required]
-        public string ReplyOrAnswer { get; }
-        public ReceivedAckSentToQuestionOwnerCmd(int replyId, int questionId, string replyOrAnswer)
+        
+        public int QuestionOwnerId { get; }
+
+        public ReceivedAckSentToQuestionOwnerCmd(int questionId, int questionOwnerId)
         {
-            ReplyId = replyId;
             QuestionId = questionId;
-            ReplyOrAnswer = replyOrAnswer;
+            QuestionOwnerId = questionOwnerId;
         }
-
-
     }
 }

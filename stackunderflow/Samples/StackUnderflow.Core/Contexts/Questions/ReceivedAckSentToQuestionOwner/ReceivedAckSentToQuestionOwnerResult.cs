@@ -8,20 +8,25 @@ namespace StackUnderflow.Domain.Core.Contexts.Questions.ReceivedAckSentToQuestio
     {
 
         public interface IReceivedAckSentToQuestionOwnerResult { };
-        public class ReplyReceived : IReceivedAckSentToQuestionOwnerResult
+        public class AckSentToQuestionOwnerResult : IReceivedAckSentToQuestionOwnerResult
         {
-            public string ReplyText { get; private set; }
+            
+            public int QuestionId { get; }
+            
+            public int QuestionOwnerId { get; }
 
-            public ReplyReceived(string replyText)
+            public AckSentToQuestionOwnerResult(int questionId, int questionOwnerId)
             {
-                ReplyText = replyText;
+                QuestionId = questionId;
+                QuestionOwnerId = questionOwnerId;
             }
+
         }
-        public class InvalidReplyReceived : IReceivedAckSentToQuestionOwnerResult
+        public class ReceivedAckNotSentToQuestionOwnerResult : IReceivedAckSentToQuestionOwnerResult
         {
             public string ErrorMessage { get; private set; }
 
-            public InvalidReplyReceived(string errorMessage)
+            public ReceivedAckNotSentToQuestionOwnerResult(string errorMessage)
             {
                 ErrorMessage = errorMessage;
             }

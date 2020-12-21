@@ -33,6 +33,9 @@ namespace StackUnderflow.API.Rest.Controllers
         public async Task<IActionResult> CreateTenantAsyncAndInviteAdmin([FromBody] CreateTenantCmd createTenantCmd)
         {
             BackofficeWriteContext ctx = new BackofficeWriteContext(new List<Tenant>(), new List<TenantUser>(), new List<User>());
+
+            // BackofficeWriteContext ctx = new BackofficeWriteContext(new List<Tenant>(), new List<TenantUser>(), new List<User>());
+
             var dependencies = new BackofficeDependencies();
             dependencies.GenerateInvitationToken = () => Guid.NewGuid().ToString();
             dependencies.SendInvitationEmail = (InvitationLetter letter) => async ()=>new InvitationAcknowledgement(Guid.NewGuid().ToString());

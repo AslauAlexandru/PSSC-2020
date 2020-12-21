@@ -6,6 +6,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Orleans;
+using Orleans.Configuration;
+using Orleans.Hosting;
+
+
 
 namespace FakeSO.API.Rest
 {
@@ -17,10 +22,24 @@ namespace FakeSO.API.Rest
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+             Host.CreateDefaultBuilder(args)
+                 .UseOrleans(silo =>
+                {    
+                    silo.UseLocalhostClustering();
+                    silo.ConfigureApplicationParts(parts =>
+                    {
+                         parts.AddApplicationPart(typeof(Program).Assembly).WithReferences().WithCodeGeneration();
+                        
+                    });
+                    silo.AddSimpleMessageStreamProvider("SMSProvider");
+                    silo.AddMemoryGrainStorage("PubStubStore");
+                })
+                 .ConfigureWebHostDefaults(webBuilder =>
+                 {
+                     webBuilder.UseStartup<Startup>();
+                 });  
+        
+
+
     }
 }

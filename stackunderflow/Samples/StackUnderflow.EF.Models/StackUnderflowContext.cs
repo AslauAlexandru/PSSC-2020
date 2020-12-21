@@ -3,6 +3,7 @@ using Access.Primitives.EFCore.DSL;
 using Access.Primitives.IO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using StackUnderflow.DatabaseModel.Models;
 
 namespace StackUnderflow.EF.Models
 {
@@ -23,6 +24,7 @@ namespace StackUnderflow.EF.Models
 
         public virtual DbSet<Badge> Badge { get; set; }
         public virtual DbSet<Post> Post { get; set; }
+    
         public virtual DbSet<PostTag> PostTag { get; set; }
         public virtual DbSet<PostType> PostType { get; set; }
         public virtual DbSet<PostView> PostView { get; set; }

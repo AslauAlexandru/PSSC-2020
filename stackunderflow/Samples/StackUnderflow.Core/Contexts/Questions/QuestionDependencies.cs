@@ -9,9 +9,9 @@ namespace StackUnderflow.Domain.Core.Contexts.Questions
 {
     public class QuestionDependencies
     {
-        public Func<string> GenerateConfirmationEmail { get; set; }
+        /*public Func<string> GenerateConfirmationEmail { get; set; }
 
-        public Func<LogInForQuestions, TryAsync<ConfirmationEmail>> SentEmail { get; set; }
+        public Func<LogInForQuestions, TryAsync<ConfirmationEmail>> SentEmail { get; set; }*/
 
     }
 }

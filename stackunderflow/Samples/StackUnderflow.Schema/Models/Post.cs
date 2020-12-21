@@ -12,6 +12,7 @@ namespace StackUnderflow.EF.Models
             PostTag = new HashSet<PostTag>();
             PostView = new HashSet<PostView>();
             Vote = new HashSet<Vote>();
+           
         }
 
         public int TenantId { get; set; }
@@ -44,6 +45,8 @@ namespace StackUnderflow.EF.Models
         public virtual ICollection<PostTag> PostTag { get; set; }
         public virtual ICollection<PostView> PostView { get; set; }
         public virtual ICollection<Vote> Vote { get; set; }
+
+        
 
         //public List<Post> ChildPosts { get; set; }
     }
