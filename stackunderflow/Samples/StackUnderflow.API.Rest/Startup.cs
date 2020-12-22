@@ -21,6 +21,12 @@ using OpenTracing;
 using OpenTracing.Util;
 using StackUnderflow.Backoffice.Adapters.CreateTenant;
 using StackUnderflow.EF.Models;
+using Orleans;
+using Orleans.Configuration;
+using Orleans.Hosting;
+using GrainInterfaces;
+
+
 
 namespace FakeSO.API.Rest
 {
@@ -42,10 +48,14 @@ namespace FakeSO.API.Rest
 
             services.AddDbContext<StackUnderflowContext>(builder =>
             {
+                //var connectionString = "Server=TIII\\MSSQLSERVER01;Database=StackUnderflow;Trusted_Connection=true";
+                //builder.UseSqlServer(connectionString);
+
                 builder.UseSqlServer(Configuration.GetConnectionString("StackUnderflow"));
             });
 
             services.AddControllers();
+          //  services.AddSingleton(p => GetSiloClusterClient());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,5 +75,27 @@ namespace FakeSO.API.Rest
                 endpoints.MapControllers();
             });
         }
+
+        public static IClusterClient GetSiloClusterClient() =>
+             Host.CreateDefaultBuilder()
+                 .UseOrleans(silo =>
+                 {
+                     silo.UseLocalhostClustering();
+                     silo.ConfigureApplicationParts(parts =>
+                     {    //nu imi recunoaste GrainInterfaces.IHello desi am pus ca referinta GrainInterfaces
+                         parts.AddApplicationPart(typeof(GrainInterfaces.IHello).Assembly).WithReferences().WithCodeGeneration();
+
+                     });
+                     silo.AddSimpleMessageStreamProvider("SMSProvider", options => { options.FireAndForgetDelivery = true; });
+                     silo.AddMemoryGrainStorage("PubStubStore");
+                 })
+                 .Build()
+                 .ConfigureWebHostDefaults(webBuilder =>
+                 {
+                     webBuilder.UseStartup<Startup>();
+                 });
+
+       
+
     }
 }

@@ -23,12 +23,13 @@ using Orleans.Streams;
 using StackUnderflow.Domain.Core.Contexts.Questions.CreateQuestion;
 using StackUnderflow.Domain.Core.Contexts.Questions.CreateReply;
 using StackUnderflow.Domain.Core.Contexts.Questions;
+using GrainInterfaces;
 
 
 namespace StackUnderflow.API.Rest.Controllers
 {
     
-    public interface IQuestionsProjectionGrain: Orleans.IGrainWithStringKey
+    public interface IQuestionsProjectionGrain: Orleans.IGrainWithStringKey,IAsyncObserver<CreateQuestionResult.ICreateQuestionResult>
     {
 
         Task<IEnumerable<Post>> GetQuestionSummaryAsync(int page = 0);
@@ -60,8 +61,8 @@ namespace StackUnderflow.API.Rest.Controllers
 
             var stream = this.GetStreamProvider("SMSProvider")//CreateReplyResult.ICreateReplyResult
                 .GetStream<CreateQuestionResult.ICreateQuestionResult>(orgId, $"{tenantId}/question");
-            //await stream.SubscribeAsync(this);
-            await stream.SubscribeAsync(stream);
+            await stream.SubscribeAsync(this);
+            //await stream.SubscribeAsync(stream);
 
 
         }
@@ -119,6 +120,10 @@ namespace StackUnderflow.API.Rest.Controllers
             throw new NotImplementedException();
         }
 
-
+       /* public Task StartAsync()
+        {
+            return Task.CompletedTask;
+        }
+       */
     }
 }
