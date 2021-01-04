@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GrainInterfaces\GrainInterfaces.csproj" />
+    <ProjectReference Include="..\Samples\StackUnderflow.EF.Models\StackUnderflow.EF.csproj" />
   </ItemGroup>
 
 </Project>

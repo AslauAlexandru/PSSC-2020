@@ -12,4 +12,8 @@
     <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="3.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Samples\StackUnderflow.Schema\StackUnderflow.DatabaseModel.csproj" />
+  </ItemGroup>
+
 </Project>

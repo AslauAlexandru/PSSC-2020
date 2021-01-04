@@ -5,13 +5,13 @@ using CSharp.Choices;
 
 namespace StackUnderflow.Domain.Core.Contexts.Questions.CheckLanguage
 {
-    [AsChoice]
-    public /*static*/ partial class CheckLanguageResult
+    //[AsChoice]
+    public static partial class CheckLanguageResult
     {
         public interface ICheckLanguageResult { };
         public class TextChecked : ICheckLanguageResult
         {
-            public int Certainty { get; private set; }
+            public int Certainty { get; set; }
 
             public TextChecked(int certainty)
             {
@@ -20,7 +20,7 @@ namespace StackUnderflow.Domain.Core.Contexts.Questions.CheckLanguage
         }
         public class TextCheckedFailed : ICheckLanguageResult
         {
-            public string ErrorMessage { get; private set; }
+            public string ErrorMessage { get;  set; }
 
             public TextCheckedFailed(string errorMessage)
             {

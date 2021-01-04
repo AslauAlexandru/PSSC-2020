@@ -24,24 +24,28 @@ using StackUnderflow.Domain.Core.Contexts.Questions.CreateQuestion;
 using StackUnderflow.Domain.Core.Contexts.Questions.CreateReply;
 using StackUnderflow.Domain.Core.Contexts.Questions;
 using GrainInterfaces;
-
+using Access.Primitives.Extensions.Cloning;
+using static StackUnderflow.Domain.Core.Contexts.Questions.CreateQuestion.CreateQuestionResult;
+using StackUnderflow.API.Rest.Controllers;
 
 namespace StackUnderflow.API.Rest.Controllers
 {
-    
-    public interface IQuestionsProjectionGrain: Orleans.IGrainWithStringKey,IAsyncObserver<CreateQuestionResult.ICreateQuestionResult>
+
+    public interface IQuestionsProjectionGrain : Orleans.IGrainWithStringKey,IAsyncObserver<CreateQuestionResult.ICreateQuestionResult> 
     {
 
         Task<IEnumerable<Post>> GetQuestionSummaryAsync(int page = 0);
         
     }
 
-    public class QuestionsProjectionGrain : Orleans.Grain, IQuestionsProjectionGrain
+    public class QuestionsProjectionGrain :  Orleans.Grain, IQuestionsProjectionGrain
     {
         private readonly StackUnderflowContext _dbContext;
         private List<Post> _posts;
         private const int PageSize = 10;
         private bool _isDirty;
+        private readonly int _tenantId = 1;
+        private readonly StackUnderflowContext _stackUnderflowContext;
 
         public QuestionsProjectionGrain(StackUnderflowContext dbContext)
         {
@@ -76,7 +80,7 @@ namespace StackUnderflow.API.Rest.Controllers
         }
 
 
-        public Task<IEnumerable<Post>> GetQuestionSummaryAsync(int page = 0)
+        public async Task<IEnumerable<Post>> GetQuestionSummaryAsync(int page = 0)
         {
             return _posts.Where(p => p.ParentPostId.HasValue)
                 .Skip(page * PageSize)
@@ -85,31 +89,41 @@ namespace StackUnderflow.API.Rest.Controllers
                 .ToList();
         }
 
-        public async Task OnNextAsync(CreateQuestionResult.ICreateQuestionResult item,StreamSequenceToken token=null)
+        //varianta in cazul in care nu imi merge MatchAsync si Match
+        public async Task OnNextAsync(Post item, StreamSequenceToken token = null)
         {
-            //varianta 1
-            await item.MatchAsync(async created =>
-            {
-                _posts = await _dbContext.Post.ToListAsync();
-                return created;
-            }, async notCreated =>
-            {
-                return notCreated;
-
-            });
-
-            //varianta 2
-             item.Match( created =>
-            {
-                _isDirty = true;
-                return created;
-            },  notCreated =>
-            {
-                return notCreated;
-
-            });
-
+            //_questions.Add(item)
+            //_questions = await _stackUnderflowContext.Post.Include(i => i.Vote).Where(p => p.TenantId == _tenantId).ToListAsync();
+            _posts.Add(item); //= new List<Post>();
         }
+
+        //varianta buna dar nu imi merge MatchAsync si Match
+         public async Task OnNextAsync(CreateQuestionResult.ICreateQuestionResult item,StreamSequenceToken token=null)
+         {   /* 
+             //varianta 1
+             await item.MatchAsync(async created =>
+             {
+                 _posts = await _dbContext.Post.ToListAsync();
+                 return created;
+             }, async notCreated =>
+             {
+                 return notCreated;
+
+             });
+
+             //varianta 2
+              item.Match( created =>
+             {
+                 _isDirty = true;
+                 return created;
+             },  notCreated =>
+             {
+                 return notCreated;
+
+             });
+            */
+            
+         }
         public Task OnCompletedAsync()
         {
             throw new NotImplementedException();

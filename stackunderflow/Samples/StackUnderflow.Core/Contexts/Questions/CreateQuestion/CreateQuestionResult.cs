@@ -1,29 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using CSharp.Choices;
 
 namespace StackUnderflow.Domain.Core.Contexts.Questions.CreateQuestion
 {
-    public class CreateQuestionResult
+    [AsChoice]
+    public static partial class CreateQuestionResult
     {
         public interface ICreateQuestionResult { }
         public class QuestionPosted: ICreateQuestionResult
         {
-            
+           
 
-            public Guid QuestionId { get; private set; }
-            public string Title { get; private set; }
 
-           public string Body { get;private set; }
+            // public int QuestionId { get;  }
+            public Guid QuestionId { get;  }
+            public string Title { get;  }
 
-            public string Tags { get;private set; }
-            public QuestionPosted(Guid questionId, string title, string body, string tags)
-            {
-                QuestionId = questionId;
-                Title = title;
-                Body = body;
-                Tags = tags;
-            }
+           public string Body { get; }
+
+            public string Tags { get; }
+             public QuestionPosted(Guid questionId, string title, string body, string tags)
+             {
+               QuestionId = questionId;
+               Title = title;
+               Body = body;
+               Tags = tags;
+             }
+
+            /* public QuestionPosted(int questionId, string title, string body, string tags)
+             {
+                 QuestionId = questionId;
+                 Title = title;
+                 Body = body;
+                 Tags = tags;
+             }*/
 
         }
 
@@ -38,18 +50,11 @@ namespace StackUnderflow.Domain.Core.Contexts.Questions.CreateQuestion
         }
         public class QuestionValidFailed : ICreateQuestionResult
         {
-            private string message;
-
-            public IEnumerable<string> ValidationErrorsMessages { get; private set; }
-
-            public QuestionValidFailed(IEnumerable<string> validationErrorsMessages)
-            {
-                ValidationErrorsMessages = validationErrorsMessages;
-            }
+            public string Message { get; }
 
             public QuestionValidFailed(string message)
             {
-                this.message = message;
+                Message = message;
             }
         }
     }

@@ -33,7 +33,8 @@ using Microsoft.Extensions.Hosting;
 using Orleans.Configuration;
 using Orleans.Hosting;
 using StackUnderflow.Domain.Core.Contexts.Questions.CheckLanguage;
-
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace StackUnderflow.API.Rest.Controllers
 {
@@ -62,26 +63,26 @@ namespace StackUnderflow.API.Rest.Controllers
             //await _interpreter.Interpret(expr, QuestionWriteContext);
             var stream = _clusterClient.GetStreamProvider("SMSProvider")
                 .GetStream<CreateQuestionResult.ICreateQuestionResult>(Guid.Empty, "1/questions");
-            await stream.OnNextAsync(new CreateQuestionResult.QuestionPosted(new Guid("1"), "titlu", "corp", "Tag"));
+            await stream.OnNextAsync(new CreateQuestionResult.QuestionPosted(Guid.NewGuid(), "titlu", "corp", "Tag"));
 
             return Ok();
         }
         [HttpPost("{questionId}/reply")]
         public async Task<IActionResult> CreateReply([FromBody] int questionId)
         {
-            //database
+            
             var posts = _dbContext.Post.ToList();
 
-            var questionWriteContext = new QuestionWriteContext(new EFList<Post>(_dbContext.Post));
-
-            /*var questionWriteContext = new QuestionWriteContext(new List<Post>() //ctx
+          //  var questionWriteContext = new QuestionWriteContext(new EFList<Post>(_dbContext.Post));
+           
+            var questionWriteContext = new QuestionWriteContext(new List<Post>() //ctx
             {
                 new Post()
                 {
                     PostId=10,
                     PostText="Intrebare?"
                 }
-            });*/
+            });
 
             //var questionDependencies = new QuestionDependencies();//dependencies
             //questionDependencies.GenerateConfirmationEmail = () => Guid.NewGuid().ToString();
@@ -95,10 +96,12 @@ namespace StackUnderflow.API.Rest.Controllers
             var result = await _interpreter.Interpret(expr, questionWriteContext /*Unit.Default*/, new object());
             //CreateReplyResult.ICreateReplyResult result = await _interpreter.Interpret(expr, questionWriteContext, questionDependencies);
             await _dbContext.SaveChangesAsync();
+            //return Ok();
+            
             return  result.Match(created=>(IActionResult)Ok(created),
-                  notCreated=>BadRequest(notCreated),
-                  invalidRequest=>ValidationProblem()
-               );
+                   notCreated=>BadRequest(notCreated),
+                   invalidRequest=>ValidationProblem()
+                );
         }
 
         //crearea intrebari varianta 2
@@ -111,30 +114,46 @@ namespace StackUnderflow.API.Rest.Controllers
             //var questionWriteContext= await _db_Context.Question.ToList();
 
 
-            var questionWriteContext = new QuestionWriteContext(new EFList<Question>(_db_Context.Question));
-
+           // var questionWriteContext = new QuestionWriteContext(new EFList<Question>(_db_Context.Question));
+             var questionWriteContext = new QuestionWriteContext(new List<Question>() //ctx
+             {
+                 new Question()
+                 {
+                     QuestionId=Guid.NewGuid(),
+                     //QuestionId=1,
+                     Title="text",
+                     Body="body",
+                    Tags="tags"
+                 }
+             });
 
             var expr = from createQuestionResult in QuestionsDomain.CreateQuestion(cmd)
-                       from checkLanguageResult in QuestionsDomain.CheckLanguage(new CheckLanguageCmd(cmd.Body))
-                       from sendAckToQuestionOwnerCmd in QuestionsDomain.SendAckToQuestionOwner(new ReceivedAckSentToQuestionOwnerCmd(1, 2))
-                       select createQuestionResult;
+                           /* from checkLanguageResult in QuestionsDomain.CheckLanguage(new CheckLanguageCmd(cmd.Body))
+                            from sendAckToQuestionOwnerCmd in QuestionsDomain.SendAckToQuestionOwner(new ReceivedAckSentToQuestionOwnerCmd(1, 2))*/
+                              select  createQuestionResult ;
+                           
 
-             var result = await _interpreter.Interpret(expr, questionWriteContext, new object());
+            var result = await _interpreter.Interpret(expr, questionWriteContext, new object());
 
             // var result = await _interpreter.Interpret(expr, questionWriteContext, questionDependencies);
 
-            _db_Context.Question.Add(new DatabaseModel.Models.Question { QuestionId = 1, Title = cmd.Title, Body = cmd.Body, Tags = cmd.Tags });
+            //_db_Context.Question.Add(new DatabaseModel.Models.Question { QuestionId = 1, Title = cmd.Title, Body = cmd.Body, Tags = cmd.Tags });
             // var question = await _dbContext.Question.Where(r => r.QuestionId == 1).SingleOrDefaultAsync();
 
            // _dbContext.Question.Update(question);
 
             await _dbContext.SaveChangesAsync();
+            // return Ok();
 
+            /*return result.createQuestionResult.Match(
+                 created => (IActionResult)Ok(created.Body),
+                 notCreated => StatusCode(StatusCodes.Status500InternalServerError, "Question could not be created."),//todo return 500 (),
+                 invalidRequest => BadRequest("Invalid request."));*/
 
-            return result.Match(created => (IActionResult)Ok(created),
-                  notCreated => BadRequest(notCreated),
-                  invalidRequest => ValidationProblem()
-               );
+            return result.Match(created => (IActionResult)Ok(created.Body),
+                   notCreated => BadRequest(notCreated),
+                   invalidRequest => ValidationProblem()
+                );
         }
     
     }

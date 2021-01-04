@@ -49,7 +49,8 @@ namespace FakeSO.API.Rest
             services.AddDbContext<StackUnderflowContext>(builder =>
             {
                 //var connectionString = "Server=TIII\\MSSQLSERVER01;Database=StackUnderflow;Trusted_Connection=true";
-                //builder.UseSqlServer(connectionString);
+                var connectionString = "Server=DESKTOP-Q9VFDIC;Database=StackUnderflow;Trusted_Connection=true";
+                builder.UseSqlServer(connectionString);
 
                 builder.UseSqlServer(Configuration.GetConnectionString("StackUnderflow"));
             });
@@ -76,7 +77,7 @@ namespace FakeSO.API.Rest
             });
         }
 
-        public static IClusterClient GetSiloClusterClient() =>
+       /* public static IClusterClient GetSiloClusterClient() =>
              Host.CreateDefaultBuilder()
                  .UseOrleans(silo =>
                  {
@@ -94,6 +95,7 @@ namespace FakeSO.API.Rest
                  {
                      webBuilder.UseStartup<Startup>();
                  });
+       */
 
        
 

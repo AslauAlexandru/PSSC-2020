@@ -20,10 +20,10 @@ namespace StackUnderflow.Domain.Core.Contexts.Questions.CreateQuestion
 {
     public class CreateQuestionAdapter : Adapter<CreateQuestionCmd, CreateQuestionResult.ICreateQuestionResult, QuestionWriteContext, QuestionDependencies>
     {
-       
-        
 
-            public override Task PostConditions(CreateQuestionCmd cmd, CreateQuestionResult.ICreateQuestionResult result, QuestionWriteContext state)
+
+        
+        public override Task PostConditions(CreateQuestionCmd cmd, CreateQuestionResult.ICreateQuestionResult result, QuestionWriteContext state)
             {
                 return Task.CompletedTask;
             }
@@ -34,7 +34,7 @@ namespace StackUnderflow.Domain.Core.Contexts.Questions.CreateQuestion
                 var wf= from valid in cmd.TryValidate()//workflow
                         let t = AddQuestion(state, cmd)
                                select t;
-              state.Question.Add(new DatabaseModel.Models.Question { QuestionId =1, Title = "Titlu intrebare", Body = "Descriere", Tags = "Tag intrebare" });
+             // state.Question.Add(new DatabaseModel.Models.Question { QuestionId =1, Title = "Titlu intrebare", Body = "Descriere", Tags = "Tag intrebare" });
 
             //state.Question.Add(new DatabaseModel.Models.Question { QuestionId = new Guid("67869"), Title = "Titlu intrebare", Body = "Descriere", Tags = "Tag intrebare" });
 
@@ -48,7 +48,7 @@ namespace StackUnderflow.Domain.Core.Contexts.Questions.CreateQuestion
 
             private ICreateQuestionResult AddQuestion(QuestionWriteContext state,object v)
             {
-                return new QuestionPosted( new Guid("1"), "titlu", "corp", "Tag");
+                return new QuestionPosted(Guid.NewGuid(), "titlu", "corp", "Tag");
             }
         //se poate si cu asta
         private object CreateQuestionFromCmd(CreateQuestionCmd cmd)

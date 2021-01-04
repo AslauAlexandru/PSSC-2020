@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using StackUnderflow.Domain.Schema.Backoffice.CreateTenantOp;
 using StackUnderflow.EF.Models;
+using CSharp.Choices;
 
 namespace StackUnderflow.Domain.Core.Contexts.Questions.CreateReply
 {
-   public /*static*/ partial class CreateReplyResult
+    [AsChoice]
+    public static partial class CreateReplyResult
     {
         public interface ICreateReplyResult { };
         public class ReplyCreated : ICreateReplyResult

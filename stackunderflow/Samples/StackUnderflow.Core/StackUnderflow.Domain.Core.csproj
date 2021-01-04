@@ -12,6 +12,8 @@
     <ProjectReference Include="..\StackUnderflow.Schema\StackUnderflow.DatabaseModel.csproj" />
     <PackageReference Include="CSharp.Choices" Version="1.1.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+    <ProjectReference Include="..\..\GrainInterfaces\GrainInterfaces.csproj" />
+    <PackageReference Include="Microsoft.Orleans.Core" Version="3.2.2" />
   </ItemGroup>
 
 </Project>
